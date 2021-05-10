@@ -1,1 +1,5 @@
 # Mish Mash Map Mod
+
+FOR COMPATIBILITY WITH MODS THAT CHANGE THE TEXTURESHEET.TGA AND TEXTURESHEET2.TGA FILES, YOU MUST DOWNLOAD A FLAT VERSION.
+
+The Mish Mash Map Mod is a graphical modification to Victoria II. I began work on it in 2015, combining some of the .dds files of CountryColors and CoolMapMod, plus CptRobau's font mod, with my own tweaks. I also played with the vanilla political overlay, inverting the colors of the colormap_political.dds file to make land pop a bit more compared to vanilla. I also used the colormap.dds file to provide some soft terrain features on the political map, though this was low resolution and I always wanted to improve it. I also changed up the border opacity a bit. Unfortunately, college got in the way and I dropped work on this. In 2019, with more time on my hands I set to work on improving this mod once again. I got into the shader files of Victoria II and coaxed the much higher fidelity terrain effects as visible in the terrain map mode to bleed through into the political map to give it a bit more life. Enjoy!
