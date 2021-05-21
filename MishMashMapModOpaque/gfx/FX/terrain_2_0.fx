@@ -681,12 +681,13 @@ TILE_STRUCT ParallaxMapping( TILE_STRUCT v, float3 viewDir ){
 	//return v;
 	
 	const float numLayers = 25;
+	float3 normViewDir = normalize(viewDir);
     // calculate the size of each layer
     float layerHeight = 1.0 / numLayers;
     // depth of current layer
     float currentLayerHeight = 0.0;
     // the amount to shift the texture coordinates per layer (from vector P)
-    float2 P = viewDir.xy / clamp(viewDir.z, 0.75, 1.0) * 0.085; 
+    float2 P = (normViewDir.xy/(length(viewDir) * (1.0f + normViewDir.z))) * 3; //MUST scale displacement against distance from camera to avoid distortion, scale up by 3 is preference
     float2 deltaTexCoords = P / numLayers;
 	float2 currentTexCoords = v.vColorTexCoord;
 	
@@ -726,7 +727,7 @@ float4 PixelShader_Map2_0_General( VS_MAP_OUTPUT v ) : COLOR
 	
 	//The map is a flat plane with normal in the y direction. This is always the truth. Thus the TBN Matrix is always as follows:
 	float3x3 WorldMat3 = float3x3(WorldMatrix._11_12_13, WorldMatrix._21_22_23, WorldMatrix._31_32_33);
-	float3 viewPos = inverse(ViewMatrix)._41_42_43; //this is expensive but paradox doesn't give me the inverse so...
+	float3 viewPos = transpose(ViewMatrix)._41_42_43; //transpose is more than good enough when we scale the coordinate displacement by distance between the fragment and camera
 	float3 T = normalize(mul(WorldMat3, float3(1, 0, 0)));
 	float3 B = normalize(mul(WorldMat3, float3(0, 0, 1)));
 	float3 N = normalize(mul(WorldMat3, float3(0, 1, 0)));
@@ -736,24 +737,24 @@ float4 PixelShader_Map2_0_General( VS_MAP_OUTPUT v ) : COLOR
 	float3 TanViewPos = mul(TBN, viewPos);
 	float3 TanFragPos = mul(TBN, v.vPosTex);
 	
-	float3 viewDir = normalize(TanViewPos - TanFragPos);
+	float3 viewDir = TanViewPos - TanFragPos;
 	
 	TILE_STRUCT s;
-    s.vTexCoord1 = v.vTexCoord1;
-    s.vColorTexCoord = v.vColorTexCoord;
-    s.vTerrainIndexColor = v.vTerrainIndexColor;
-    s.vTexCoord0 = v.vTexCoord0.xy;
-	
-	s = ParallaxMapping( s, viewDir );
-	
-    float4 TerrainColor = GenerateTiles( s );
+    	s.vTexCoord1 = v.vTexCoord1;
+    	s.vColorTexCoord = v.vColorTexCoord;
+    	s.vTerrainIndexColor = v.vTerrainIndexColor;
+    	s.vTexCoord0 = v.vTexCoord0.xy;
 
-    float Grey = dot( TerrainColor.rgb, GREYIFY ); 
+	s = ParallaxMapping( s, viewDir );
+
+    	float4 TerrainColor = GenerateTiles( s );
+
+    	float Grey = dot( TerrainColor.rgb, GREYIFY ); 
  	TerrainColor.rgb = Grey;
 	TerrainColor *= White;
 	
 	float2 vProvinceUV = v.vProvinceId + 0.5f;
-    vProvinceUV /= PROVINCE_LOOKUP_SIZE;
+    	vProvinceUV /= PROVINCE_LOOKUP_SIZE;
   
   	float4 Color1 = tex2D( GeneralTexture, vProvinceUV ) - 0.7;
 	float4 Color2 = tex2D( GeneralTexture2, vProvinceUV ) - 0.7;
@@ -772,10 +773,10 @@ float4 PixelShader_Map2_0_General_Low( VS_MAP_OUTPUT v ) : COLOR
 {
 
 	float4 OverlayColor = tex2D( OverlayTexture, v.vColorTexCoord );
-    float Grey = dot( OverlayColor.rgb, GREYIFY ); 
+    	float Grey = dot( OverlayColor.rgb, GREYIFY ); 
 	
 	float2 vProvinceUV = v.vProvinceId + 0.5f;
-    vProvinceUV /= PROVINCE_LOOKUP_SIZE;
+    	vProvinceUV /= PROVINCE_LOOKUP_SIZE;
   
   	float4 Color1 = tex2D( GeneralTexture, vProvinceUV ) - 0.7;
 	float4 Color2 = tex2D( GeneralTexture2, vProvinceUV ) - 0.7;
@@ -794,10 +795,10 @@ float4 PixelShader_Map2_0_General_Low( VS_MAP_OUTPUT v ) : COLOR
 
 float4 PixelShader_Map2_0( VS_MAP_OUTPUT v ) : COLOR
 {
-	
+
 	//The map is a flat plane with normal in the y direction. This is always the truth. Thus the TBN Matrix is always as follows:
 	float3x3 WorldMat3 = float3x3(WorldMatrix._11_12_13, WorldMatrix._21_22_23, WorldMatrix._31_32_33);
-	float3 viewPos = inverse(ViewMatrix)._41_42_43; //this is expensive but paradox doesn't give me the inverse so...
+	float3 viewPos = transpose(ViewMatrix)._41_42_43; //transpose is more than good enough when we scale the coordinate displacement by distance between the fragment and camera
 	float3 T = normalize(mul(WorldMat3, float3(1, 0, 0)));
 	float3 B = normalize(mul(WorldMat3, float3(0, 0, 1)));
 	float3 N = normalize(mul(WorldMat3, float3(0, 1, 0)));
@@ -807,7 +808,7 @@ float4 PixelShader_Map2_0( VS_MAP_OUTPUT v ) : COLOR
 	float3 TanViewPos = mul(TBN, viewPos);
 	float3 TanFragPos = mul(TBN, v.vPosTex);
 	
-	float3 viewDir = normalize(TanViewPos - TanFragPos);
+	float3 viewDir = TanViewPos - TanFragPos;
 	
     TILE_STRUCT s;
     s.vTexCoord1 = v.vTexCoord1;
@@ -1256,7 +1257,7 @@ technique BeachShader_General
 		//ALPHATESTENABLE = True;
 		//ALPHABLENDENABLE = True;
 		//SrcBlend = SRCALPHA;
-		//§DestBlend = INVSRCALPHA;
+		//Â§DestBlend = INVSRCALPHA;
 				
 		VertexShader = compile vs_1_1 VertexShader_Beach_General();
 		PixelShader = compile ps_2_0 PixelShader_Beach_General();
