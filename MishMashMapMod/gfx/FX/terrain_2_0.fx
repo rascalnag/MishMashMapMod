@@ -679,14 +679,14 @@ TILE_STRUCT ParallaxMapping( TILE_STRUCT v, float3 viewDir ){
 	//v.vColorTexCoord += p;
 	//return v;
 	
-	const float numLayers = 25;
+	const float numLayers = 20;
 	float3 normViewDir = normalize(viewDir);
     // calculate the size of each layer
     float layerHeight = 1.0 / numLayers;
     // depth of current layer
     float currentLayerHeight = 0.0;
     // the amount to shift the texture coordinates per layer (from vector P)
-    float2 P = (normViewDir.xy/(length(viewDir) * (1.0f + normViewDir.z))) * 3; //MUST scale displacement against distance from camera to avoid distortion, scale up by 3 is preference
+    float2 P = (normViewDir.xy/(length(viewDir) * (1.0f + normViewDir.z))) * 3.3; //MUST scale displacement against distance from camera to avoid distortion, scale up by 3.3 is preference
     float2 deltaTexCoords = P / numLayers;
 	float2 currentTexCoords = v.vColorTexCoord;
 	
@@ -1282,7 +1282,7 @@ technique BeachShader_General
 		//ALPHATESTENABLE = True;
 		//ALPHABLENDENABLE = True;
 		//SrcBlend = SRCALPHA;
-		//§DestBlend = INVSRCALPHA;
+		//Â§DestBlend = INVSRCALPHA;
 				
 		VertexShader = compile vs_1_1 VertexShader_Beach_General();
 		PixelShader = compile ps_2_0 PixelShader_Beach_General();
