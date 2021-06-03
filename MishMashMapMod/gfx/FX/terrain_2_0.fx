@@ -1224,6 +1224,9 @@ technique TerrainShader_Graphical
 {
 	pass p0
 	{
+		ALPHATESTENABLE = False;
+		ALPHABLENDENABLE = False;
+		
 		VertexShader = compile vs_1_1 VertexShader_Map();
 		PixelShader = compile ps_3_0 PixelShader_Map2_0();
 	}
@@ -1233,6 +1236,9 @@ technique TerrainShader_General
 {
 	pass p0
 	{
+		ALPHATESTENABLE = False;
+		ALPHABLENDENABLE = False;
+		
 		VertexShader = compile vs_1_1 VertexShader_Map_General();
 		PixelShader = compile ps_3_0 PixelShader_Map2_0_General();
 	}
@@ -1242,6 +1248,9 @@ technique TerrainShader_General_Low
 {
 	pass p0
 	{
+		ALPHATESTENABLE = False;
+		ALPHABLENDENABLE = False;
+		
 		VertexShader = compile vs_1_1 VertexShader_Map_General_Low();
 		PixelShader = compile ps_3_0 PixelShader_Map2_0_General_Low();
 	}
