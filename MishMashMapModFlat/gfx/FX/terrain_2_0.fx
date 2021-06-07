@@ -763,7 +763,6 @@ float4 PixelShader_Map2_0_General( VS_MAP_OUTPUT v ) : COLOR
 	
 	Color.rgb = lerp(TerrainColor.rgb, Color.rgb, 0.3);
 	Color.rgb *= COLOR_LIGHTNESS;
-	Color.a = 1; // Some systems have different ways of treating the alpha channel in the texturesheet. Setting it to 1 after everything should prevent glitches arising.
 	
 	return Color;
 }
@@ -814,7 +813,6 @@ float4 PixelShader_Map2_0_General_Low( VS_MAP_OUTPUT v ) : COLOR
 	
 	Color.rgb = lerp(lerp(Color.rgb, ColorColor.rgb, 0.56), TerrainColor.rgb, 0.22);
 	Color.rgb *= 1.5;
-	Color.a = 1; // Some systems have different ways of treating the alpha channel in the texturesheet. Setting it to 1 after everything should prevent glitches arising.
 	
 	return Color;
 	
@@ -866,7 +864,6 @@ float4 PixelShader_Map2_0( VS_MAP_OUTPUT v ) : COLOR
 	OutColor.rgb += FogColor.g;
 	///////////////////
 	
-	OutColor.a = 1; // Some systems have different ways of treating the alpha channel in the texturesheet. Setting it to 1 after everything should prevent glitches arising.
 	return OutColor;
 }
 
@@ -1225,7 +1222,7 @@ technique TerrainShader_Graphical
 {
 	pass p0
 	{
-		VertexShader = compile vs_1_1 VertexShader_Map();
+		VertexShader = compile vs_3_0 VertexShader_Map();
 		PixelShader = compile ps_3_0 PixelShader_Map2_0();
 	}
 }
@@ -1234,7 +1231,7 @@ technique TerrainShader_General
 {
 	pass p0
 	{
-		VertexShader = compile vs_1_1 VertexShader_Map_General();
+		VertexShader = compile vs_3_0 VertexShader_Map_General();
 		PixelShader = compile ps_3_0 PixelShader_Map2_0_General();
 	}
 }
@@ -1243,7 +1240,7 @@ technique TerrainShader_General_Low
 {
 	pass p0
 	{
-		VertexShader = compile vs_1_1 VertexShader_Map_General_Low();
+		VertexShader = compile vs_3_0 VertexShader_Map_General_Low();
 		PixelShader = compile ps_3_0 PixelShader_Map2_0_General_Low();
 	}
 }
